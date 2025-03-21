@@ -3,7 +3,8 @@
 # rm -rf ./build ./install ./log
 
 wget -O ros2.repos https://raw.githubusercontent.com/ros2/ros2/rolling/ros2.repos
-rosinstall_generator --rosdistro rolling --deps --upstream --format repos desktop_full > desktop_full.repos
+rosinstall_generator --rosdistro rolling --deps --upstream --format repos vision_opencv ros_gz > custom.repos
+# rosinstall_generator --rosdistro rolling --deps --upstream --format repos desktop_full > desktop_full.repos
 # rosinstall_generator --rosdistro rolling --deps --upstream --format repos --from-path ~/colcon_ws/src --deps-only > colcon_ws.repos
 
 # Find repository names in ros2.repos, and remove matching entries from desktop_full.repos
@@ -22,6 +23,7 @@ REPO_NAMES="${REPO_NAMES} fastcdr fastdds"
 # Remove lines starting with repo names, plus the following 3 lines from desktop_full.repos
 for REPO_NAME in $REPO_NAMES; do
   sed -i "/^  ${REPO_NAME}:/,+3d" desktop_full.repos
+  sed -i "/^  ${REPO_NAME}:/,+3d" custom.repos
 done
 
 mkdir -p src
@@ -35,5 +37,10 @@ vcs pull src
 
 wget -O src/ros/urdfdom_headers/package.xml https://raw.github.com/ros2-gbp/urdfdom_headers-release/debian/rolling/noble/urdfdom_headers/package.xml
 
+sudo rosdep init
+rosdep update
 rosdep install -r -n --os=ubuntu:noble --ignore-src --default-yes --from-path src || true
-colcon build --symlink-install # --executor sequential
+
+colcon build --symlink-install --packages-up-to-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --packages-skip-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf
+MAKEFLAGS=-j6 colcon build --symlink-install --packages-select-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --executor sequential
+colcon build --symlink-install
