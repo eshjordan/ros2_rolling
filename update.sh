@@ -3,7 +3,7 @@
 # rm -rf ./build ./install ./log
 
 wget -O ros2.repos https://raw.githubusercontent.com/ros2/ros2/rolling/ros2.repos
-rosinstall_generator --rosdistro rolling --deps --upstream --format repos vision_opencv ros_gz > custom.repos
+rosinstall_generator --rosdistro rolling --deps --upstream --format repos vision_opencv ros_gz joint_state_publisher > custom.repos
 # rosinstall_generator --rosdistro rolling --deps --upstream --format repos desktop_full > desktop_full.repos
 # rosinstall_generator --rosdistro rolling --deps --upstream --format repos --from-path ~/colcon_ws/src --deps-only > colcon_ws.repos
 
@@ -41,6 +41,6 @@ sudo rosdep init
 rosdep update
 rosdep install -r -n --os=ubuntu:noble --ignore-src --default-yes --from-path src || true
 
-colcon build --symlink-install --packages-up-to-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --packages-skip-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf
-MAKEFLAGS=-j6 colcon build --symlink-install --packages-select-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --executor sequential
-colcon build --symlink-install
+# colcon build --symlink-install --packages-up-to-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --packages-skip-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf
+# MAKEFLAGS=-j6 colcon build --symlink-install --packages-select-regex "gz_.*_vendor" "ros_gz_.*" rviz_default_plugins sdformat_urdf --executor sequential
+# colcon build --symlink-install
