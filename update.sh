@@ -30,7 +30,7 @@ mkdir -p src
 vcs custom src --args remote update
 vcs import src < ros2.repos
 #vcs import src < desktop_full.repos
-#vcs import src < custom.repos
+vcs import src < custom.repos
 vcs pull src
 
 wget -O src/ros/urdfdom_headers/package.xml https://raw.github.com/ros2-gbp/urdfdom_headers-release/debian/rolling/noble/urdfdom_headers/package.xml
